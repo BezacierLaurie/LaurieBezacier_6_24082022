@@ -17,6 +17,8 @@ const saucesController = require('../controllers/sauces'); // 'sauceController' 
 // - L'argument '/api/sauces' est le 'endpoint' visé par l'application ('endpoint' = URL / URI (route vers l'API) -> Il est remplacé par seulement un '/' car le router remplace le début du chemin)
 // - REMPLACER 'use' par 'un verbe HTTP' (pour CIBLER les différents types de requêtes)
 
+// SAUCES :
+
 // Route 'GET' : Pour RECUPERER une 'sauce' individuelle dans MongoDB (BdD)
 // Fonction ('getOneSauce') : méthode du controller, qui est IMPORTEE et APPLIQUEE à la route 
 router.get('/:id', auth, saucesController.getOneSauce);
@@ -36,6 +38,13 @@ router.put('/:id', auth, multer, saucesController.modifySauce);
 // Route 'DELETE' : Pour supprimer une 'sauce' dans MongoDB (BdD)
 // Fonction ('deleteSauce') : méthode du controller, qui est IMPORTEE et APPLIQUEE à la route 
 router.delete('/:id', auth, saucesController.deleteSauce);
+
+// LIKES / DISLIKES :
+
+// Route 'POST' : Pour ENREGISTRER une 'sauce' dans MongoDB (BdD)
+// Fonction ('likeSauce') : méthode du controller, qui est IMPORTEE et APPLIQUEE à la route 
+//router.post('/:id/like', auth, saucesController.likeSauce);
+
 
 // Pour EXPORTER le routeur
 module.exports = router;

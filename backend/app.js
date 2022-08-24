@@ -1,3 +1,6 @@
+// Pour IMPORTER 'dotenv' (Sécurité BdD)
+const dotenv = require('dotenv').config()
+
 // Pour IMPORTER 'mongoose' (BdD 'MongoDB')
 const mongoose = require('mongoose');
 
@@ -10,9 +13,6 @@ const usersRoutes = require('./routes/users');
 // Pour IMPORTER 'express' (Application 'Express')
 const express = require('express');
 
-// Pour IMPORTER 'dotenv' (Sécurité BdD)
-const dotenv = require('dotenv').config()
-
 // Pour ACCEDER au 'path' (chemin) du server
 const path = require('path');
 
@@ -20,7 +20,7 @@ const path = require('path');
 const app = express();
 
 // Connexion entre la BdD et l'API (BdD : 'test')
-mongoose.connect('mongodb+srv:' + process.env.identifiant,
+mongoose.connect('mongodb+srv:' + process.env.pathMongoDB,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true

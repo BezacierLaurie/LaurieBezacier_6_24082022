@@ -1,3 +1,6 @@
+// Pour IMPORTER 'dotenv' (Sécurité BdD)
+const dotenv = require('dotenv').config()
+
 // Pour IMPORTER 'bcrypt' (plug-in 'Crypteur de MdP')
 const bcrypt = require('bcrypt');
 
@@ -43,7 +46,7 @@ exports.login = (req, res, next) => { // 'login' : fonction qui permet de VERIFI
                                 userId: user._id,
                                 token: jwt.sign( // 'sign' : fonction (de 'jsonwebtoken') qui permet 
                                     { userId: user._id }, // données que l'on souhaite encodées à l'intérieur du 'token' (appelées le 'payload')
-                                    process.env.secretKey, // clé secrète (pour l'encodage)
+                                    process.env.tokenKey, // clé secrète (pour l'encodage)
                                     { expiresIn: '24h' } // 'expiresIn' : durée de validité du 'token' avant expiration
                                 )
                             });

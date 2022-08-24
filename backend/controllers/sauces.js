@@ -4,6 +4,8 @@ const Sauce = require('../models/Sauce');
 // Pour IMPORTER 'fs' ('fs' : 'file system' = 'système de fichiers' - c'est un des packages de 'Node' - il permet de supprimer un fichier du système de fichiers)
 const fs = require('fs');
 
+// SAUCES :
+
 // Pour GERER la route 'GET' : On EXPORTE la fonction 'getOneSauce' pour la récupération d'un objet ('sauce'), particulier, présent dans MongoDB (BdD)
 exports.getOneSauce = (req, res, next) => { 
     Sauce.findOne({ _id: req.params.id }) // 'Sauce' (de 'models') - ':id' = partie dynamique (de la route) (= 'req.params.id' : paramètre de route dynamique)
@@ -46,12 +48,12 @@ exports.modifySauce = (req, res, next) => {
     // Astuce : Pour SAVOIR si la requête a été faite avec un fichier, il faut regarder s'il y a un champ 'file' dans l'objet 'requête'
     // Pour EXTRAIRE l'objet 'requête' et VERIFIER s'il y a un fichier dans la requête
     const sauceObject = req.file ?
-        // Cas 1 : L'utilisateur a transmis un fichier. Pour RECUPERER l'objet : il faut PARSER la chaîne de caractères et RE-CREER l'URL
+        // Cas 1 : L'utilisateur a transmis un fichier. Pour RECUPERER l'objet 'sauce' : il faut PARSER la chaîne de caractères et RE-CREER l'URL
         {
             ...JSON.parse(req.body.sauce),
             imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         }
-        // Cas 2 : L'utilisateur n'a pas transmis de fichier. Pour RECUPERER l'objet : il faut RECUPERER simplement l'objet directement dans le corps de la requête
+        // Cas 2 : L'utilisateur n'a pas transmis de fichier. Pour RECUPERER l'objet 'sauce' : il faut RECUPERER simplement l'objet 'sauce' directement dans le corps de la requête
         : { ...req.body };
 
     // Pour SUPPRIMER le 'userId' venant de la requête (pour EVITER qu'un personne crée un objet à son nom, puis le modifie pour le réassigner à une autre personne) (mesure de sécurité)
@@ -97,3 +99,8 @@ exports.deleteSauce = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+
+// LIKES / DISLIKES :
+
+/* exports.likeSauce = (req, res, next) => {
+}; */

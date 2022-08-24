@@ -1,3 +1,6 @@
+// Pour IMPORTER 'dotenv' (Sécurité BdD)
+const dotenv = require('dotenv').config()
+
 // Pour IMPORTER 'jsonwebtoken' (plug-in qui permet de CREER des 'tokens' et de les VERIFIER)
 const jwt = require('jsonwebtoken');
 
@@ -13,7 +16,7 @@ module.exports = (req, res, next) => {
         // Pour RECUPERER le 'token' (récupération de l'autorisation)
         const token = req.headers.authorization.split(' ')[1]; // 'split': fonction qui permet de DIVISER une 'string' en un tableau autour de l'espace qui se trouve entre le mot-clé 'error' et le 'token' - '[1]' : position du 'token' dans le tableau
         // Pour DECODER le 'token'
-        const decodedToken = jwt.verify(token, process.env.secretKey); // 'verify': fonction de ('jsonwebtoken') qui permet de DECODER le token récupéré - ('token' récupéré - clé secrète)
+        const decodedToken = jwt.verify(token, process.env.tokenKey); // 'verify': fonction de ('jsonwebtoken') qui permet de DECODER le token récupéré - (token récupéré , clé secrète)
         // Pour RECUPERER le 'userId'
         const userId = decodedToken.userId;
         // Pour RAJOUTER le 'userId' à l'objet 'request' (qui sera transmis aux routes afin qu'elles puissent l'exploiter)
@@ -22,7 +25,7 @@ module.exports = (req, res, next) => {
         };
         next();
     } catch (error) {
-        res.status(401).json({ error });
+        res.status(403).json({ error : "unauthorized request"});
     }
 };
 
