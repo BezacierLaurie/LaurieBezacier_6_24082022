@@ -1,6 +1,3 @@
-// Pour IMPORTER 'dotenv' (Sécurité BdD)
-const dotenv = require('dotenv').config()
-
 // Pour IMPORTER 'jsonwebtoken' (plug-in qui permet de CREER des 'tokens' et de les VERIFIER)
 const jwt = require('jsonwebtoken');
 

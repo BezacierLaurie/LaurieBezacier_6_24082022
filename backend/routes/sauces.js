@@ -41,7 +41,7 @@ router.delete('/:id', auth, saucesController.deleteSauce);
 
 // LIKES / DISLIKES :
 
-// Route 'POST' : Pour ENREGISTRER une 'sauce' dans MongoDB (BdD)
+// Route 'POST' : Pour ENREGISTRER un 'like' (ou un 'dislike') dans MongoDB (BdD) (info : Méthode 'POST' utilisée car l'action que l'on souhaite réaliser est l'ajout d'un '1' dans 'like' (ou 'dislike') : '+1 like' (ou '+1 dislike'))
 // Fonction ('likeSauce') : méthode du controller, qui est IMPORTEE et APPLIQUEE à la route 
 //router.post('/:id/like', auth, saucesController.likeSauce);
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 // Schéma (de données) de l'objet 'sauceSchema' (de 'Mongoose')
 const sauceSchema = mongoose.Schema({
+    // SAUCES :
     userId: { type: String, required: true },
     name: { type: String, required: true },
     manufacturer: { type: String, required: true },
@@ -10,6 +11,8 @@ const sauceSchema = mongoose.Schema({
     mainPepper: { type: String, required: true },
     imageUrl: { type: String, required: true },
     heat : { type: Number, required: true },
+
+    // LIKES / DISLIKES :
     likes: { type: Number},
     dislikes: { type: Number},
     usersLiked: { type: ["String <userId>"]},
