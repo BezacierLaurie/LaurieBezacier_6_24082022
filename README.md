@@ -23,7 +23,7 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
 - Hashage du mot de passe utilisateur : **bcrypt**
 - Manipulation sécurisée de la BdD : **mongoose**
 - Vérification du caractère unique de l'email utilisateur, dans la BdD : **mongoose-unique-validator**
-- Utilisation de variables d'environnement pour les données sensibles ('path' vers MongoDB et clé secrète): **dotenv**
+- Utilisation de variables d'environnement pour les données sensibles ('path' vers MongoDB et clé secrète) : **dotenv**
 - Validation des données utilisateurs : ...
 - Authentification de l'utilisateur par token : **jsonwebtoken**
 
@@ -32,8 +32,8 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
     - Cloner le [site 'Piiquante'](https://github.com/LauryF/LaurieBezacier_6_24082022.git)
     - Ajouter un fichier de configuration nommé ".env" à la racine du dossier 'back-end'. 
     - A l'intérieur de ce dossier, 'copier / coller' ces 2 variables d'environnement "secrètes":
-            - 'pathMongoDB = 'lien_vers_la_base_de_données_MongoDB''
-            - 'tokenKey = 'clé_secrète_pour_crypter_les_tokens''
+        - 'pathMongoDB = 'lien_vers_la_base_de_données_MongoDB''
+        - 'tokenKey = 'clé_secrète_pour_crypter_les_tokens''
 2. Configuration du **front-end** :
     - Lancer le front-end de l'application :
         - Dans un (premier) terminal, accéder au dossier 'frontend' (--> 'cd frontend') 
