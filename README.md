@@ -1,4 +1,5 @@
 # LaurieBezacier_6_24082022
+<<<<<<< HEAD
 OpenClassrooms : Formation 'Développement Web' - Projet 6 : Création de l'application sécurisée 'Piiquante' (clonage du front-end + intégration du back-end)
 
 - Objectifs du projet :
@@ -55,3 +56,6 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
     > Le front-end est accessible à l'adresse http://localhost:4200 .
 
 **Important** : Pour des tests spécifiques (avec par exemple 'Postman'), le back-end répond à l'adresse: http://localhost:3000 (attention: authentification requise pour toutes les routes '/api/sauces/').
+=======
+Site Piiquante
+>>>>>>> 2ff41b8b6b97b5913607df5fde61cd5ac6cc251c
