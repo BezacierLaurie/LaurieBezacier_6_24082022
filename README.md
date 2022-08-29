@@ -1,5 +1,4 @@
 # LaurieBezacier_6_24082022
-<<<<<<< HEAD
 OpenClassrooms : Formation 'Développement Web' - Projet 6 : Création de l'application sécurisée 'Piiquante' (clonage du front-end + intégration du back-end)
 
 - Objectifs du projet :
