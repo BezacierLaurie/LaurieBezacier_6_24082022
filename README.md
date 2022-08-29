@@ -54,4 +54,4 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
 4. Accès à l'**application 'Piiquante'** (dans un navigateur Web) :
     - Le front-end est accessible à l'adresse http://localhost:4200 .
 
-> **Important** : Pour des tests spécifiques (avec par exemple 'Postman'), le back-end répond à l'adresse: http://localhost:3000 (attention: authentification requise pour toutes les routes '/api/sauces/').
+> **Important** : Pour des tests spécifiques (avec par exemple 'Postman'), le back-end répond à l'adresse : http://localhost:3000 (**Attention** : Authentification requise pour toutes les routes '/api/sauces/').
