@@ -24,8 +24,10 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
 - Manipulation sécurisée de la BdD : **mongoose**
 - Vérification du caractère unique de l'email utilisateur, dans la BdD : **mongoose-unique-validator**
 - Utilisation de variables d'environnement pour les données sensibles ('path' vers MongoDB et clé secrète) : **dotenv**
-- Validation des données utilisateurs : ...
 - Authentification de l'utilisateur par token : **jsonwebtoken**
+- Protection des headers HTTP retournés par l'application 'Express' : **helmet**
+- Enregistrement des données (log) de chaque requête effectuée dans un fichier "assess.log" : **morgan**
+- Prévention des attaques (comme la 'force brute') : **express-rate-limit**
 
 ## Pour tester l'application :
 1. Configuration des **dossiers (et fichiers)** :
@@ -43,14 +45,7 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
     - Lancer le back-end de l'application :
         - Dans un (deuxième) terminal, accéder au dossier 'backend' (--> 'cd backend')
         - Puis, installer les dépendances (--> 'npm install')
-        - Ensuite, lancer 'node server' (Info : Pour une relance automatique du server : installer 'nodemon' (--> 'npm install -g nodemon'))
-        - Enfin, dans un (troisième) terminal, installer tous les 'outils utiles' (framework, packages, etc ...) au fonctionnement du projet :
-            - 'npm install express'
-            - 'npm install mongoose'
-            - 'npm install mongoose-unique-validator' (Info : Il est possible d'avoir à ajouter le flag  '--force'  à la commande si le validateur est installé peu de temps après l'arrivée d'une nouvelle version de 'mongoose')
-            - 'npm install bcrypt'
-            - 'npm install jsonwebtoken'
-            - 'npm install multer'
+        - Enfin, lancer 'node server' (Info : Pour une relance automatique du server : installer 'nodemon' (--> 'npm install -g nodemon'))
 4. Accès à l'**application 'Piiquante'** (dans un navigateur Web) :
     - Le front-end est accessible à l'adresse http://localhost:4200 .
 

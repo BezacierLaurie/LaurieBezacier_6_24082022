@@ -1,5 +1,5 @@
 // Pour IMPORTER 'dotenv' (Sécurité BdD)
-const dotenv = require('dotenv').config()
+const dotenv = require('dotenv').config();
 
 // Pour IMPORTER 'mongoose' (BdD 'MongoDB')
 const mongoose = require('mongoose');
@@ -13,11 +13,53 @@ const usersRoutes = require('./routes/users');
 // Pour IMPORTER 'express' (Application 'Express')
 const express = require('express');
 
+// Pour IMPORTER 'helmet' (Sécurité 'helmet' - c'est un des packages de 'NodeJS' - il aide à sécuriser les en-têtes HTTP retournés par l'application 'Express')
+const helmet = require('helmet');
+
+// Pour IMPORTER 'morgan' (Sécurité 'morgan' (logger HTTP) - c'est un middleware au niveau des requêtes HTTP - il sert à enregistrer les données (requêtes ou autres))
+const morgan = require('morgan');
+
+// Pour IMPORTER 'express-rate-limit' (Sécurité 'express-rate-limit' - c'est un middleware pour les routes 'Express'- il sert à prévenir des attaques, comme la 'force brute')
+const rateLimit = require('express-rate-limit');
+
 // Pour ACCEDER au 'path' (chemin) du server
 const path = require('path');
 
 // Pour CREER une application
 const app = express();
+
+// Pour UTILISER 'helmet'
+app.use(helmet(
+    {
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "images",
+                ],
+                imgSrc: ["'self'", "images"],
+            },
+        },
+        // Pour CONTOURNER la protection de 'helmet' (afin de pouvoir utiliser (dans ce site) des images provenant d'autres sites) 
+        // (sécurité : 'autorisation exceptionnelle' car API publique -> INTERDIT avec une API privée !)
+        crossOriginResourcePolicy: {policy : "cross-origin"}
+    }
+));
+
+// Pour UTILISER 'morgan' (pour LOGGER les 'req' et 'res')
+app.use(morgan('dev'));
+
+// Pour UTILISER 'express-rate-limit'
+app.enable("trust proxy");
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limite chaque IP à 100 requêtes par `window` (ici, par 15 minutes )
+    standardHeaders: true,  // Renvoie les informations de limite de débit dans les en-têtes `RateLimit-*` 
+    legacyHeaders: false,  // Désactive les en-têtes `X-RateLimit-*` 
+});
+//  Pour APPLIQUER le middleware de limitation de débit à toutes les demandes
+app.use(limiter);
 
 // Connexion entre la BdD et l'API (BdD : 'test')
 mongoose.connect('mongodb+srv:' + process.env.pathMongoDB,
@@ -33,11 +75,12 @@ app.use(express.json()); // Info : Complète la fonctionnalité du 'body-parser'
 
 // Pour IMPLEMENTER "CORS" (appels sécurisés vers l'application) (pas d'URL précisée pour permettre une application à toutes les routes)
 app.use((req, res, next) => {
-    // Pour accéder à l'API depuis n'importe quelle origine
+    // Pour ACCEDER à l'API depuis n'importe quelle origine ('*') 
+    // (sécurité : 'autorisation exceptionnelle' car API publique -> INTERDIT avec une API privée !)
     res.setHeader('Access-Control-Allow-Origin', '*');
-    // Pour ajouter les headers mentionnés aux requêtes envoyées vers l'API
+    // Pour AJOUTER les headers mentionnés aux requêtes envoyées vers l'API
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    // Pour envoyer des requêtes avec différentes méthodes
+    // Pour ENVOYER des requêtes avec différentes méthodes
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });

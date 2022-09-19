@@ -1,8 +1,8 @@
-// Pour IMPORTER 'mongoose' (BdD 'MongoDB')
+// Pour IMPORTER 'mongoose' (Bibliothèque de 'MongoDB')
 const mongoose = require('mongoose');
 
-// Schéma (de données) de l'objet 'sauceSchema' (de 'Mongoose')
-const sauceSchema = mongoose.Schema({
+// Schéma (de données) de l'objet 'sauceSchema' (de 'mongoose')
+const sauceSchema = mongoose.Schema({ // 'sauceSchema' = variable qui contient la class 'Schema' de 'mongoose'
     // SAUCES :
     userId: { type: String, required: true },
     name: { type: String, required: true },
@@ -13,11 +13,11 @@ const sauceSchema = mongoose.Schema({
     heat : { type: Number, required: true },
 
     // LIKES / DISLIKES :
-    likes: { type: Number},
-    dislikes: { type: Number},
+    likes: { type: Number}, // = représente la longeur du tableau 'usersLiked' (et non pas le '+1')
+    dislikes: { type: Number}, // = représente la longeur du tableau 'usersDisliked' (et non pas le '-1')
     usersLiked: { type: ["String <userId>"]},
     usersDisliked: { type: ["String <userId>"]},
 });
 
 // Pour EXPORTER le schéma ('sauceSchema') sous forme de modèle 'terminé' 
-module.exports = mongoose.model("Sauce", sauceSchema); // 'model' = fonction de 'mongoose' - ("nom du modèle" , schéma de l'objet)
+module.exports = mongoose.model("Sauce", sauceSchema); // 'model' = fonction de 'mongoose' - ("nom du modèle" , schéma de l'objet) : 'Sauce' (màj car il représente la class 'sauceSchema') = 'sauceSchema' (nouveau nom de 'Sauce')
