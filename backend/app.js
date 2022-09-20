@@ -53,8 +53,8 @@ app.use(morgan('dev'));
 // Pour UTILISER 'express-rate-limit'
 app.enable("trust proxy");
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limite chaque IP à 100 requêtes par `window` (ici, par 15 minutes )
+    windowMs: 60 * 60 * 1000, // 60 minutes
+    max: 100, // Limite chaque IP à 100 requêtes par `window` (ici, par 60 minutes )
     standardHeaders: true,  // Renvoie les informations de limite de débit dans les en-têtes `RateLimit-*` 
     legacyHeaders: false,  // Désactive les en-têtes `X-RateLimit-*` 
 });

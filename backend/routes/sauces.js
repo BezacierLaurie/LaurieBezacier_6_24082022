@@ -1,7 +1,7 @@
 // Pour IMPORTER 'express' (Application 'Express')
 const express = require('express');
 
-// Pour CREER un routeur 
+// Pour CREER un 'router Express' (Middleware 'routeur')
 const router = express.Router();
 
 // Pour IMPORTER 'auth' (Middleware 'authentification')
@@ -14,12 +14,12 @@ const multer = require('../middleware/multer-config');
 const saucesController = require('../controllers/sauces'); // 'sauceController' : Permet la gestion de la route
 
 // Infos (générales) :
-// - L'argument '/api/sauces' est le 'endpoint' visé par l'application ('endpoint' = URL / URI (route vers l'API) -> Il est remplacé par seulement un '/' car le router remplace le début du chemin)
+// - L'argument '/api/sauces' est le 'endpoint' visé par l'application ('endpoint' = URL / URI (route vers l'API) -> Il est remplacé par seulement un '/' car le router remplace le début du path)
 // - REMPLACER 'use' par 'un verbe HTTP' (pour CIBLER les différents types de requêtes)
 
 // SAUCES :
 
-// Route 'GET' : Pour TROUVER / RECUPERER la liste complète des 'sauces' dans MongoDB (BdD)
+// Route 'GET' : Pour TROUVER / RECUPERER la liste complète des 'sauces' dans 'MongoDB' (BdD)
 // Fonction ('getAllSauces') : méthode du controller, qui est IMPORTEE et APPLIQUEE à la route 
 router.get('/', auth, saucesController.getAllSauces);
 
