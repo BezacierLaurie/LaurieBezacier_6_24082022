@@ -32,14 +32,14 @@ exports.login = (req, res, next) => { // 'login' : fonction qui permet de VERIFI
         .then(user => { // 'user': valeur récupérée par la requête
             // Pour SAVOIR si le 'user' a été trouvé dans la BdD
             if (user === null) { // Si 'user' pas trouvé
-                res.status(401).json({ message: 'Paire identifiant / mot de passe incorrecte' }); // Ce message permet de préserver la confidentialité des 'users' concernant leur information personnelle: 'inscrit' ou 'non-inscrit'
+                return res.status(401).json({ message: 'Paire identifiant / mot de passe incorrecte' }); // Ce message permet de préserver la confidentialité des 'users' concernant leur information personnelle: 'inscrit' ou 'non-inscrit'
             } else { // Sinon
                 bcrypt.compare(req.body.password, user.password) // 'compare' : fonction (de bcrypt) qui permet de VERIFIER si le MdP entré par le 'user' est correct, en le comparant à celui stocké dans la BdD - (MdP entré par le 'user' - MdP stocké dans la BdD)
                     .then(valid => {
                         if (!valid) { // Si MdP incorrect
-                            res.status(401).json({ message: 'Paire identifiant / mot de passe incorrecte' }); // Ce message permet de préserver la confidentialité des 'users' concernant leur information personnelle: 'inscrit' ou 'non-inscrit'
+                            return res.status(401).json({ message: 'Paire identifiant / mot de passe incorrecte' }); // Ce message permet de préserver la confidentialité des 'users' concernant leur information personnelle: 'inscrit' ou 'non-inscrit'
                         } else { // Sinon
-                            res.status(200).json({ // objet qui contient les infos nécessaires à l'authentification des requêtes émises plutard par le 'user'
+                            return res.status(200).json({ // objet qui contient les infos nécessaires à l'authentification des requêtes émises plutard par le 'user'
                                 userId: user._id,
                                 token: jwt.sign( // 'sign' : fonction (de 'jsonwebtoken') qui permet 
                                     { userId: user._id }, // données que l'on souhaite encodées à l'intérieur du 'token' (appelées le 'payload')

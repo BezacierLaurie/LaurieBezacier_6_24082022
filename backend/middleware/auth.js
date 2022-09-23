@@ -22,7 +22,7 @@ module.exports = (req, res, next) => {
         };
         next();
     } catch (error) {
-        res.status(403).json({ error : "unauthorized request"});
+        return res.status(403).json({ error : "unauthorized request"});
     }
 };
 

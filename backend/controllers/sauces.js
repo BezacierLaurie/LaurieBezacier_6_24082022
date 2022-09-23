@@ -42,7 +42,7 @@ exports.createSauce = (req, res, next) => {
     });
     // Pour ENREGISTRER le nouvel objet 'sauce' dans MongoDB (BdD)
     sauce.save() // 'sauce' : instance de la class 'Sauce' (= 'sauceSchema') (importée plus haut) - 'save' : fonction de la class 'Schema' (de 'mongoose') (nom défini par 'mongoose')
-        .then(() => { res.status(201).json({ message: 'Objet enregistré !' }) }) // Retour de la promesse
+        .then(() => { res.status(201).json({ message: 'Sauce créée !' }) }) // Retour de la promesse
         .catch(error => { res.status(400).json({ error }) }) // Erreur ('Mauvaise' requête)
 };
 
@@ -67,7 +67,8 @@ exports.modifySauce = (req, res, next) => { // 'modifySauce' (choix personnel du
         .then((sauce) => { // 'sauce' (obj) : data (données) du résultat de la requête du front-end (réponse contenue dans la promesse)
             // Soit 'Non-autorisé' (car erreur d'authentification utilisateur)
             if (sauce.userId != req.auth.userId) { // 'userId' (de 'sauce' (data))
-                res.status(401).json({ message: 'Non-autorisé !' });
+                return res.status(401).json({ message: 'Non-autorisé !' }); // Pour STOPPER l'action
+                
             }
             // Soit 'Mise à jour de l'enregistrement'
             else {
@@ -79,7 +80,7 @@ exports.modifySauce = (req, res, next) => { // 'modifySauce' (choix personnel du
                                         -> nouvelle version de l'objet : {'...sauceReq' (déconstruction de l'objet 'sauce', que le front-end a envoyé), l'id (dans l'URL)} 
                                         (important : car celui présent dans le corps de la requête ne sera pas forcément le bon)
                      */
-                    .then(() => res.status(200).json({ message: 'Objet modifié !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
+                    .then(() => res.status(200).json({ message: 'Sauce modifiée !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
                     .catch(error => res.status(401).json({ error })); // Error
             }
         })
@@ -92,7 +93,7 @@ exports.deleteSauce = (req, res, next) => {
         .then(sauce => { // 'sauce' (obj) : data (données) du résultat de la requête du front-end (réponse contenue dans la promesse)
             // Soit 'Non-autorisé' (car erreur d'authentification utilisateur)
             if (sauce.userId != req.auth.userId) { // 'sauce' (du 'front-end')
-                res.status(401).json({ message: 'Non-autorisé !' });
+                return res.status(401).json({ message: 'Non-autorisé !' });
             }
             // Soit 'Suppression de l'objet dans MongoDB (BdD)' et 'Suppression de l'image du système de fichiers'
             else {
@@ -102,7 +103,7 @@ exports.deleteSauce = (req, res, next) => {
                 fs.unlink(`images/${filename}`, () => { // 'unlink' (méthode de 'fs') - '() =>' : Appel de la callback (une fois que la suppression aura eu lieu) (info : la suppression dans le système de fichiers est faite de manière asynchrone)
                     // Partie 'Suppression de l'objet dans MongoDB (BdD)'
                     Sauce.deleteOne({ _id: req.params.id }) // = Objet qui sert de filtre (sélecteur) pour DESIGNER celui que l'on souhaite SUPPRIMER) : {'id' envoyé dans les paramètres de requête}
-                        .then(() => res.status(200).json({ message: 'Objet supprimé !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
+                        .then(() => res.status(200).json({ message: 'Sauce supprimée !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
                         .catch(error => res.status(401).json({ error })); // Error
                 });
             }
@@ -125,7 +126,7 @@ exports.likeSauce = (req, res, next) => {
             // Si 'sauce' n'existe pas dans 'MongoDB' (BdD)
             if (!sauce) { // = pas de sauce - 'sauce' (obj) : data (données) du résultat de la requête de MongoDB (BdD) (réponse contenue dans la promesse)
                 // alors 'erreur'
-                res.status(401).json({ message: "Cette sauce n'existe pas dans la base de donnée !" });
+                return res.status(401).json({ message: "Cette sauce n'existe pas dans la base de donnée !" });
             }
             // Sinon 'sauce' existe : GERER la valeur du 'like'
             else {
@@ -189,9 +190,9 @@ exports.likeSauce = (req, res, next) => {
                                         -> celui que l'on souhaite modifier (parsé) : {'_id' (de 'MongoDB' (BdD)) : 'sauceId' (paramètre de l'URL)}
                                         -> nouvelle version de l'objet : {partie des valeurs (de 'sauce') que l'on souhaite modifier}
                      */
-                    .then(() => res.status(200).json({ message: 'ETAPE 8 : Sauce modifiée !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
+                    .then(() => res.status(200).json({ message: 'Vote enregistré !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
                     .catch(error => res.status(401).json({ error })); // Error
             }
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({ error })); // Error
 };
