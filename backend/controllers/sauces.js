@@ -47,43 +47,65 @@ exports.createSauce = (req, res, next) => {
 };
 
 // Pour GERER la route 'PUT' : On EXPORTE la fonction 'modifySauce' pour la modification d'un objet ('sauce') dans MongoDB (BdD)
-exports.modifySauce = (req, res, next) => { // 'modifySauce' (choix personnel du nom)
+exports.modifySauce = (req, res, next) => {
     // 2 cas possibles : l'utilisateur peut transmettre un fichier ou non. Suivant le cas, l'objet sera récupéré d'une manière différente
     // Astuce : Pour SAVOIR si la requête a été faite avec un fichier, il faut regarder s'il y a un champ 'file' dans l'objet 'requête'
-    // Pour EXTRAIRE l'objet 'requête' et VERIFIER s'il y a un fichier dans la requête
-    const sauceReq = req.file ? // '?' = if
-        // Cas 1 : L'utilisateur a transmis un fichier. Pour RECUPERER l'objet 'sauce' (présent dans le body de la requête du 'front-end') : il faut PARSER la chaîne de caractères et RE-CREER l'URL
-        {
-            ...JSON.parse(req.body.sauce), // 'sauce' : sauce dans le body de la requête du front-end (nom défini par 'mongoose')
-            imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        }
-        // Cas 2 : L'utilisateur n'a pas transmis de fichier. Pour RECUPERER l'objet 'sauce' : il faut RECUPERER simplement l'objet 'sauce' directement dans le corps de la requête
-        : { ...req.body };
+    // Pour VERIFIER s'il y a un fichier dans la requête
+    if (req.file) {
+        Sauce.findOne({ _id: req.params.id })
+            .then(sauce => {
+                // Cas 1 : L'utilisateur a transmis un fichier 
+                // Pour SUPPRIMER l'ancienne image du fichier 'images', il faut :
+                // RECUPERER l'URL enregistrée 
+                const filename = sauce.imageUrl.split('/images/')[1];
+                // et RE-CREER le chemin sur le système de fichiers à partir de celle-ci
+                fs.unlink(`images/${filename}`, () => {
+                    // Pour FINIR de mettre à jour 'sauce', il faut RECUPERER l'objet 'sauce' (présent dans le body de la requête du 'front-end'), pour cela il faut :
+                    const sauceReq = {
+                        // PARSER la chaîne de caractères
+                        ...JSON.parse(req.body.sauce),
+                        // et RE-CREER l'URL de l'image
+                        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    }
 
-    // Pour SUPPRIMER le 'userId' venant de la requête (pour EVITER qu'un personne crée un objet à son nom, puis le modifie pour le réassigner à une autre personne) (mesure de sécurité)
-    delete sauceReq._userId;
-    // Pour VERIFIER les droits de l'utilisateur. Procédé : On RECUPERE l'objet 'userId' dans MongoDB (BdD) (pour VERIFIER si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le MODIFIER) (mesure de sécurité)
-    Sauce.findOne({ _id: req.params.id }) // 'Sauce' = 'sauceSchema' (de 'models') (importée plus haut) - 'findOne' : fonction de la class 'Schema' (de 'mongoose') (nom défini par 'mongoose') - 'req.params.id' (paramètre de route dynamique) : permet de RECUPERER l'objet dans MongoDB (BdD)
-        .then((sauce) => { // 'sauce' (obj) : data (données) du résultat de la requête du front-end (réponse contenue dans la promesse)
-            // Soit 'Non-autorisé' (car erreur d'authentification utilisateur)
-            if (sauce.userId != req.auth.userId) { // 'userId' (de 'sauce' (data))
-                return res.status(401).json({ message: 'Non-autorisé !' }); // Pour STOPPER l'action
-                
-            }
-            // Soit 'Mise à jour de l'enregistrement'
-            else {
-                Sauce.updateOne({ _id: req.params.id }, { ...sauceReq, _id: req.params.id })
-                    /*                  - 'Sauce' = 'sauceSchema' (de 'models') (importée plus haut) 
-                                        - '{}' : Filtre qui permet de dire quel est l'{enregistrement à mettre à jour} et avec quel {objet} 
-                                        => objet de comparaison : 
-                                        -> celui que l'on souhaite modifier (parsé) : {'_id' (de 'MongoDB' (BdD)) : 'sauceId' (paramètre de l'URL)}
-                                        -> nouvelle version de l'objet : {'...sauceReq' (déconstruction de l'objet 'sauce', que le front-end a envoyé), l'id (dans l'URL)} 
-                                        (important : car celui présent dans le corps de la requête ne sera pas forcément le bon)
-                     */
-                    .then(() => res.status(200).json({ message: 'Sauce modifiée !' })) // Retour d'une promesse (=> : renvoie d'une réponse positive)
-                    .catch(error => res.status(401).json({ error })); // Error
-            }
-        })
+                    // Pour SUPPRIMER le 'userId' venant de la requête (pour EVITER qu'un personne crée un objet à son nom, puis le modifie pour le réassigner à une autre personne) (mesure de sécurité)
+                    delete sauceReq._userId;
+
+                    // Pour VERIFIER les droits de l'utilisateur : On RECUPERE l'objet 'userId' dans MongoDB (BdD) (pour VERIFIER si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le MODIFIER) (mesure de sécurité)
+                    // Soit 'Non-autorisé' (car erreur d'authentification utilisateur)
+                    if (sauce.userId != req.auth.userId) { // 'sauce' (du 'front-end')
+                        return res.status(401).json({ message: 'Non-autorisé !' });
+                    }
+                    // Soit la modification de 'sauce' dans 'MongoDB' (BdD) est autorisée
+                    else {
+                        Sauce.updateOne({ _id: req.params.id }, { ...sauceReq, _id: req.params.id })
+                            .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
+                            .catch(error => res.status(400).json({ error }));
+                    }
+                })
+            })
+            .catch(error => res.status(500).json({ error }));
+    }        
+    // Cas 2 : L'utilisateur n'a pas transmis de fichier
+    else {
+        // Pour RECUPERER l'objet 'sauce' : il faut RECUPERER simplement l'objet 'sauce' directement dans le corps de la requête
+        const sauceReq = { ...req.body };
+        
+        // Pour SUPPRIMER le 'userId' venant de la requête (pour EVITER qu'un personne crée un objet à son nom, puis le modifie pour le réassigner à une autre personne) (mesure de sécurité)
+        delete sauceReq._userId;
+        
+        // Pour VERIFIER les droits de l'utilisateur : On RECUPERE l'objet 'userId' dans MongoDB (BdD) (pour VERIFIER si c'est bien l'utilisateur à qui appartient cet objet qui cherche à le MODIFIER) (mesure de sécurité)
+        // Soit 'Non-autorisé' (car erreur d'authentification utilisateur)
+        if (sauceReq.userId != req.auth.userId) { // 'sauceReq' (du 'front-end')
+            return res.status(401).json({ message: 'Non-autorisé !' });
+        }
+        // Soit la modification de 'sauce' dans 'MongoDB' (BdD) est autorisée
+        else {
+            Sauce.updateOne({ _id: req.params.id }, { ...sauceReq, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Sauce modifiée!' }))
+                .catch(error => res.status(400).json({ error }));
+        }
+    }
 };
 
 // Pour GERER la route 'DELETE' : On EXPORTE la fonction 'deleteSauce' pour la suppression d'un objet ('sauce') dans MongoDB (BdD)
