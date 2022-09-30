@@ -31,8 +31,9 @@ Le but est de créer le back-end (API) de l'application, le front-end étant dé
 
 ## Pour tester l'application :
 1. Configuration des **dossiers (et fichiers)** :
-    - Cloner l'e' [Application Web 'Piiquante'](https://github.com/LauryF/LaurieBezacier_6_24082022.git)
-    - Ajouter un fichier de configuration nommé ".env" à la racine du dossier 'back-end'. 
+    - Cloner l'[Application Web 'Piiquante'](https://github.com/LauryF/LaurieBezacier_6_24082022.git) (sur GitHub)
+    - Ajouter un dossier 'images' à la racine du dossier 'backend'
+    - De même, ajouter un fichier de configuration nommé ".env" à la racine du dossier 'backend' 
     - A l'intérieur de ce dossier, 'copier / coller' ces 2 variables d'environnement "secrètes":
         - pathMongoDB = '//evaluateur:SessionSoutenance@cluster0.4npgx.mongodb.net/?retryWrites=true&w=majority'
         - tokenKey = 'clé_secrète_pour_crypter_les_tokens'
