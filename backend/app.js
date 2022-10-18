@@ -61,7 +61,7 @@ const limiter = rateLimit({
 //  Pour APPLIQUER le middleware de limitation de débit à toutes les demandes
 app.use(limiter);
 
-// Connexion entre la BdD et l'API (BdD : 'test')
+// Connexion entre la BdD et l'API (BdD : 'sauces')
 mongoose.connect('mongodb+srv:' + process.env.pathMongoDB,
     {
         useNewUrlParser: true,
