@@ -11,7 +11,7 @@ const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
 // Pour IMPORTER 'sauces' (Controller 'sauces') 
-const saucesController = require('../controllers/sauces'); // 'sauceController' : Permet la gestion de la route
+const saucesController = require('../controllers/sauces'); // 'saucesController' : Permet la gestion de la route
 
 // Infos (générales) :
 // - L'argument '/api/sauces' est le 'endpoint' visé par l'application ('endpoint' = URL / URI (route vers l'API) -> Il est remplacé par seulement un '/' car le router remplace le début du path)
