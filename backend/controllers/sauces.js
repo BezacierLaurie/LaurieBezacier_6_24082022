@@ -25,13 +25,13 @@ exports.getAllSauces = (req, res, next) => {
 exports.createSauce = (req, res, next) => {
     // Pour PARSER l'objet 'requête' (comme l'objet (= valeur de 'clé / valeur') est reçu sous la forme d'une string, car envoyée en 'form-data', elle est PARSEE en objet json pour pouvoir être utilisée)
     const sauceReq = JSON.parse(req.body.sauce); // 'sauce' : sauce dans le body de la requête du 'front-end' (nom défini par 'mongoose')
-    // Pour SUPPRIMER (dans l'objet) les champs '_id' (car l'id de l'objet va être généré automatiquement par la BdD (MongoDB)) et '_userId' (qui correspond à la personne qui a créé l'objet) (on utilise désormais le 'userId' qui vient du token d'authentification (pour être sur qu'il soit valide)) (car il ne faut JAMAIS faire confiance aux clients)
+    // Pour SUPPRIMER (dans l'objet) les champs '_id' (car l'id de l'objet va être généré automatiquement par la BdD (MongoDB)) et 'userId' (qui correspond à la personne qui a créé l'objet) (on utilise désormais le 'userId' qui vient du token d'authentification (pour être sur qu'il soit valide)) (car il ne faut JAMAIS faire confiance aux clients)
     delete sauceReq._id;
-    delete sauceReq.user_id;
+    delete sauceReq.userId;
     // Pour CREER l'objet (avec ce qui a été passé (moins les 2 champs supprimés))
     const sauce = new Sauce({ // 'new Sauce' : création d'une nouvelle instance (= exemplaire) de la class 'Sauce' (= 'sauceSchema') (importée plus haut)
-        ...sauceReq, // Déconstruction de l'objet 'sauce', que le front-end a envoyé (6 'clé / valeur' : userId, name, manufacturer, ...)
-        userId: req.auth.userId, // 'userId' = extrait de l'objet 'requête' grâce au middleware 'auth'
+        ...sauceReq, // Déconstruction de l'objet 'sauce', que le front-end a envoyé (5 'clé / valeur' : name, manufacturer, ... sauf celles citées et celles modifiées) (A ne pas faire car pas sécurisé ! -> opter plutôt pour le détail de ce que l'on accepte du body de la requête du front-end)
+        userId: req.auth.userId, // 'userId' = extrait de l'objet 'requête' grâce au middleware 'auth' (token)
         // Ou 'res.locals.auth.userId'à la place de "req.auth.userId"
         // Pour GENERER l'URL de l'image (par nous-même, car 'Multer' ne délivre que le nom du fichier, en utilisant des propriétés de l'objet 'requête' : protocole - nom d'hôte - nom du dossier - nom du fichier (délivré par 'Multer'))
         imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
